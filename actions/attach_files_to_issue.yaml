@@ -1,0 +1,23 @@
+ref: jira.attach_files_to_issue
+label: "Attach Files To Jira Issue"
+description: "Sequentially upload worker-local files to a Jira issue"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: jira_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "jira.credentials", description: "Pack-owned Jira credential Key ref"}
+  file_paths:
+    type: array
+    items: {type: string}
+    required: true
+    description: "File paths under ATTUNE_ARTIFACTS_DIR on the selected worker"
+  issue_key: {type: string, required: true}
+output:
+  operation: {type: string, required: true}
+  result: {type: array, description: "Attachment metadata in upload order"}
+tags: [jira, issue, attachment, write]

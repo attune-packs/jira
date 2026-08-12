@@ -1,0 +1,14 @@
+ref: jira.jira_issue_poll
+label: "Jira Issue Polling Sensor"
+description: "Polls Jira for new issues for each active trigger rule"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: jira_issue_poll.py
+trigger_types:
+  - jira.issues_tracker
+  - jira.issues_tracker_for_apiv2
+poll_interval: 5
+log_retention_policy: versions
+log_retention_limit: 4
+tags: [jira, issue, polling]

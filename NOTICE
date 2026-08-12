@@ -1,0 +1,8 @@
+This product includes an adaptation of the StackStorm Exchange Jira pack,
+version 3.3.0, originally attributed to StackStorm, Inc.
+
+Source: https://github.com/StackStorm-Exchange/stackstorm-jira
+License: Apache License 2.0
+
+The source pack's patched_search.py implementation was not copied. This pack
+uses the public python-jira client API instead.

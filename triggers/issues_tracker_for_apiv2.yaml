@@ -1,0 +1,20 @@
+ref: jira.issues_tracker_for_apiv2
+label: "New Jira Issue Raw"
+description: "Emitted with raw Jira issue fields when polling discovers a new issue"
+enabled: true
+parameters:
+  credential_key: {type: string, default: "jira.credentials", key_ref: true, description: "Attune Key ref containing Jira credentials"}
+  project: {type: string, required: true, pattern: "^[A-Za-z][A-Za-z0-9_-]*$"}
+  poll_interval_seconds: {type: integer, default: 30, minimum: 5, maximum: 3600}
+  page_size: {type: integer, default: 50, minimum: 1, maximum: 100}
+  start_after_issue_id: {type: string, pattern: "^[0-9]+$", description: "Optional initial high-water mark"}
+  baseline_existing: {type: boolean, default: true, description: "On first run, skip existing issues like the source sensor"}
+output:
+  project: {type: string, required: true}
+  id: {type: string, required: true}
+  expand: {type: string, required: true}
+  issue_key: {type: string, required: true}
+  issue_url: {type: string, required: true}
+  issue_browse_url: {type: string, required: true}
+  fields: {type: object, required: true}
+tags: [jira, issue, polling, raw]

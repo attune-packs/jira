@@ -1,0 +1,19 @@
+ref: jira.update_dashboard_automatic_refresh
+label: "Update Jira Dashboard Automatic Refresh"
+description: "Set a Jira dashboard automatic refresh interval"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: jira_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "jira.credentials", description: "Pack-owned Jira credential Key ref"}
+  id: {type: string, required: true}
+  minutes: {type: integer, required: true, minimum: 0}
+output:
+  operation: {type: string, required: true}
+  result: {type: object, description: "HTTP update status"}
+tags: [jira, dashboard, write]

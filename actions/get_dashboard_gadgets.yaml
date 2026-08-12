@@ -1,0 +1,18 @@
+ref: jira.get_dashboard_gadgets
+label: "Get Jira Dashboard Gadgets"
+description: "List gadgets on a Jira dashboard"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: jira_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "jira.credentials", description: "Pack-owned Jira credential Key ref"}
+  dashboard_id: {type: string, required: true}
+output:
+  operation: {type: string, required: true}
+  result: {type: array, description: "Dashboard gadgets"}
+tags: [jira, dashboard, read]

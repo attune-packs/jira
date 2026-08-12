@@ -1,0 +1,19 @@
+ref: jira.comment_issue
+label: "Comment On Jira Issue"
+description: "Add a comment to a Jira issue"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: jira_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "jira.credentials", description: "Pack-owned Jira credential Key ref"}
+  comment_text: {type: string, required: true}
+  issue_key: {type: string, required: true}
+output:
+  operation: {type: string, required: true}
+  result: {type: object, description: "Created comment"}
+tags: [jira, issue, comment, write]

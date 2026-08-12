@@ -1,0 +1,20 @@
+ref: jira.add_field_value
+label: "Add Jira Field Value"
+description: "Add a value to an issue field"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: jira_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "jira.credentials", description: "Pack-owned Jira credential Key ref"}
+  issue_key: {type: string, required: true}
+  field: {type: string, required: true}
+  value: {type: string, required: true}
+output:
+  operation: {type: string, required: true}
+  result: {type: object, description: "Updated issue"}
+tags: [jira, issue, write]

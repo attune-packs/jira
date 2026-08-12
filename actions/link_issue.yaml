@@ -1,0 +1,20 @@
+ref: jira.link_issue
+label: "Link Jira Issues"
+description: "Create one Jira issue link"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: jira_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "jira.credentials", description: "Pack-owned Jira credential Key ref"}
+  inward_issue_key: {type: string, required: true}
+  outward_issue_key: {type: string, required: true}
+  link_type: {type: string, required: true, default: "relates to"}
+output:
+  operation: {type: string, required: true}
+  result: {type: object, description: "Link status and Jira response"}
+tags: [jira, issue, link, write]

@@ -1,0 +1,21 @@
+ref: jira.create_dashboard
+label: "Create Jira Dashboard"
+description: "Create a Jira dashboard"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: jira_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "jira.credentials", description: "Pack-owned Jira credential Key ref"}
+  name: {type: string, required: true}
+  description: {type: string}
+  edit_permissions: {type: array, items: {type: object}}
+  share_permissions: {type: array, items: {type: object}}
+output:
+  operation: {type: string, required: true}
+  result: {type: object, description: "Created dashboard"}
+tags: [jira, dashboard, write]

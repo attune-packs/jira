@@ -1,0 +1,24 @@
+ref: jira.bulk_link_issue
+label: "Bulk Link Jira Issues"
+description: "Link up to ten Jira issues concurrently and report every item result"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: jira_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "jira.credentials", description: "Pack-owned Jira credential Key ref"}
+  issue_key_list:
+    type: array
+    items: {type: string}
+    required: true
+  target_issue: {type: string, required: true}
+  direction: {type: string, required: true, default: outward, enum: [outward, inward]}
+  link_type: {type: string, required: true, default: "relates to"}
+output:
+  operation: {type: string, required: true}
+  result: {type: object, description: "Aggregate and per-link results"}
+tags: [jira, issue, link, write]

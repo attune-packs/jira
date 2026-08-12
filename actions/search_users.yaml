@@ -1,0 +1,22 @@
+ref: jira.search_users
+label: "Search Jira Users"
+description: "Search Jira users"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: jira_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "jira.credentials", description: "Pack-owned Jira credential Key ref"}
+  query: {type: string, required: true}
+  start_at: {type: integer, default: 0, minimum: 0}
+  max_results: {type: integer, default: 50, minimum: 1, maximum: 1000}
+  include_active: {type: boolean, default: true}
+  include_inactive: {type: boolean, default: false}
+output:
+  operation: {type: string, required: true}
+  result: {type: array, description: "Raw Jira user resources"}
+tags: [jira, user, search, read]

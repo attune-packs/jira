@@ -1,0 +1,20 @@
+ref: jira.attach_file_to_issue
+label: "Attach File To Jira Issue"
+description: "Upload one worker-local file to a Jira issue"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: jira_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "jira.credentials", description: "Pack-owned Jira credential Key ref"}
+  file_path: {type: string, required: true, description: "File path under ATTUNE_ARTIFACTS_DIR on the selected worker"}
+  file_name: {type: string}
+  issue_key: {type: string, required: true}
+output:
+  operation: {type: string, required: true}
+  result: {type: object, description: "Attachment metadata"}
+tags: [jira, issue, attachment, write]

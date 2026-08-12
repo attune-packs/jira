@@ -1,0 +1,24 @@
+ref: jira.add_gadget
+label: "Add Jira Dashboard Gadget"
+description: "Add a gadget to a Jira dashboard"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: jira_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "jira.credentials", description: "Pack-owned Jira credential Key ref"}
+  dashboard_id: {type: string, required: true}
+  color: {type: string, default: blue, enum: [blue, red, yellow, green, cyan, purple, gray, white]}
+  ignore_uri_and_module_key_validation: {type: boolean, default: false}
+  module_key: {type: string}
+  position: {type: object}
+  title: {type: string}
+  uri: {type: string}
+output:
+  operation: {type: string, required: true}
+  result: {type: object, description: "Created gadget"}
+tags: [jira, dashboard, write]

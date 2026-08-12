@@ -1,0 +1,1 @@
+"""Shared Jira pack implementation."""

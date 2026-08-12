@@ -1,0 +1,25 @@
+ref: jira.search_issues
+label: "Search Jira Issues"
+description: "Run a JQL issue search"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: jira_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "jira.credentials", description: "Pack-owned Jira credential Key ref"}
+  query: {type: string, required: true}
+  start_at: {type: integer, default: 0, minimum: 0}
+  max_results: {type: integer, default: 50, minimum: 1, maximum: 1000}
+  include_comments: {type: boolean, required: true, default: false}
+  include_attachments: {type: boolean, required: true, default: false}
+  include_customfields: {type: boolean, required: true, default: false}
+  include_components: {type: boolean, required: true, default: false}
+  include_subtasks: {type: boolean, required: true, default: false}
+output:
+  operation: {type: string, required: true}
+  result: {type: array, description: "Normalized issues"}
+tags: [jira, issue, search, read]

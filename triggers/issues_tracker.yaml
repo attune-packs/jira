@@ -1,0 +1,21 @@
+ref: jira.issues_tracker
+label: "New Jira Issue"
+description: "Emitted when polling discovers a newly created Jira issue"
+enabled: true
+parameters:
+  credential_key: {type: string, default: "jira.credentials", key_ref: true, description: "Attune Key ref containing Jira credentials"}
+  project: {type: string, required: true, pattern: "^[A-Za-z][A-Za-z0-9_-]*$"}
+  poll_interval_seconds: {type: integer, default: 30, minimum: 5, maximum: 3600}
+  page_size: {type: integer, default: 50, minimum: 1, maximum: 100}
+  start_after_issue_id: {type: string, pattern: "^[0-9]+$", description: "Optional initial high-water mark"}
+  baseline_existing: {type: boolean, default: true, description: "On first run, skip existing issues like the source sensor"}
+output:
+  project: {type: string, required: true}
+  issue_name: {type: string, required: true}
+  issue_url: {type: string, required: true}
+  issue_browse_url: {type: string, required: true}
+  created: {type: string, required: true}
+  assignee: {type: object, required: true, description: "Raw Jira assignee object; empty when unassigned"}
+  fix_versions: {type: array, required: true, items: {type: object}}
+  issue_type: {type: string, required: true}
+tags: [jira, issue, polling]

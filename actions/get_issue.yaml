@@ -1,0 +1,25 @@
+ref: jira.get_issue
+label: "Get Jira Issue"
+description: "Retrieve and normalize a Jira issue"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: jira_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "jira.credentials", description: "Pack-owned Jira credential Key ref"}
+  issue_key: {type: string, required: true}
+  include_comments: {type: boolean, required: true, default: false}
+  include_attachments: {type: boolean, required: true, default: false}
+  include_customfields: {type: boolean, required: true, default: false}
+  include_components: {type: boolean, required: true, default: false}
+  include_subtasks: {type: boolean, required: true, default: false}
+  include_links: {type: boolean, required: true, default: false}
+  sanitize_formatting: {type: boolean, required: true, default: false, description: "Remove literal double braces recursively"}
+output:
+  operation: {type: string, required: true}
+  result: {type: object, description: "Normalized issue"}
+tags: [jira, issue, read]
