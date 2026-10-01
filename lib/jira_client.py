@@ -30,7 +30,7 @@ def _fetch_key(ref: str) -> Dict[str, Any]:
         raise JiraPackError("attune-sdk is required to resolve credential_key") from exc
 
     try:
-        response = get_key.sync_detailed(ref, client=attune.context.client, decrypt=True)
+        response = get_key.sync_detailed(ref, client=attune.context.client)
     except Exception as exc:
         raise JiraPackError(f"unable to read credential Key {ref!r}") from exc
     status = int(response.status_code)
@@ -128,7 +128,7 @@ def create_client(config: Mapping[str, Any]) -> Any:
 
 
 def client_from_params(params: Mapping[str, Any]) -> tuple[Any, Dict[str, Any]]:
-    key_ref = params.get("credential_key", "jira.credentials")
+    key_ref = params.get("credential_key", "pack.jira.credentials")
     config = _fetch_key(str(key_ref))
     return create_client(config), config
 

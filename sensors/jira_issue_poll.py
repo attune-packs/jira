@@ -146,7 +146,7 @@ def _production_sensor() -> type:
                 self.logger.warning("rule %s Jira poll is already running", rule_id)
                 return
             try:
-                credentials = _fetch_key(str(config.get("credential_key", "jira.credentials")))
+                credentials = _fetch_key(str(config.get("credential_key", "pack.jira.credentials")))
                 merged = {**credentials, **{name: config[name] for name in POLL_CONFIG_FIELDS if name in config}}
                 client = create_client(merged)
 

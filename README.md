@@ -16,7 +16,7 @@ version 3.3.0 (`a11138dc0cba9669e8db0660d0de45dee57b8aab`).
 
 ## Setup
 
-Create an encrypted, pack-owned Attune Key with ref `jira.credentials`. Actions
+Create an encrypted, pack-owned Attune Key with ref `pack.jira.credentials`. Actions
 request the reserved `standard` execution scope to decrypt this Key.
 The Key value is an object; use only the fields required by one authentication
 method:
@@ -51,7 +51,7 @@ library behavior of 3, with an allowed range of 0 to 10. Set it to 0 for
 non-idempotent mutations when duplicate side effects are unacceptable. Unlike
 the source pack, TLS verification settings apply to every authentication method.
 
-Every action accepts `credential_key`, defaulting to `jira.credentials`. A
+Every action accepts `credential_key`, defaulting to `pack.jira.credentials`. A
 different pack-owned Key can be selected per execution.
 
 ## Action Usage
@@ -100,7 +100,7 @@ The `jira.jira_issue_poll` sensor services two source-compatible trigger refs:
 | `jira.issues_tracker_for_apiv2` | Issue identity plus complete raw Jira `fields`. The historical name is retained; it does not force REST API v2. |
 
 Set each rule's `credential_key` to the Attune Key containing its Jira
-credentials; it defaults to `jira.credentials`. The trigger schema marks this
+credentials; it defaults to `pack.jira.credentials`. The trigger schema marks this
 parameter as a Key ref, so Attune includes only the Keys selected by active
 rules in the managed sensor's signed access token. The sensor resolves the Key
 for each rule independently and does not require a worker credential file.
@@ -134,7 +134,7 @@ inside the common `result` envelope.
 
 | Source | Attune target | Fidelity | Important differences | Follow-up |
 |---|---|---|---|---|
-| `pack.yaml`, `config.schema.yaml`, `jira.yaml.example` | `pack.yaml`, encrypted `jira.credentials` Key | adapted | Secrets moved out of config; project is no longer globally required. | Configure a pack-owned encrypted Key after installation. |
+| `pack.yaml`, `config.schema.yaml`, `jira.yaml.example` | `pack.yaml`, encrypted `pack.jira.credentials` Key | adapted | Secrets moved out of config; project is no longer globally required. | Configure a pack-owned encrypted Key after installation. |
 | `actions/lib/base.py` | `lib/jira_client.py` | adapted | Explicit Key lookup, timeout validation, and TLS verification for all auth modes. | Integration-test each enabled auth mode. |
 | `actions/lib/formatters.py`, `utils.py` | `lib/jira_client.py` normalization | adapted | Null handling is safer; output is under `result`. | Compare rich-text/ADF fields against the target Jira deployment. |
 | `actions/lib/patched_search.py` | Standard python-jira search API | partial | Unattributed monkey patch was not copied; Cloud token pagination and nonzero offsets may differ. | Verify Cloud enhanced-search behavior before publication. |

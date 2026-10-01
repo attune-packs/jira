@@ -71,7 +71,7 @@ class PackTests(unittest.TestCase):
             self.assertEqual(doc["parameter_format"], "json")
             self.assertEqual(doc["output_format"], "json")
             self.assertEqual(doc["default_execution_permission_set_refs"], ["standard"])
-            self.assertEqual(doc["parameters"]["credential_key"]["default"], "jira.credentials")
+            self.assertEqual(doc["parameters"]["credential_key"]["default"], "pack.jira.credentials")
             self.assertEqual(set(doc["output"]), {"operation", "result"})
 
     def test_trigger_sensor_contracts_are_linked(self):
@@ -84,7 +84,7 @@ class PackTests(unittest.TestCase):
         for trigger in triggers.values():
             self.assertNotIn("credential_file", trigger["parameters"])
             credential = trigger["parameters"]["credential_key"]
-            self.assertEqual(credential["default"], "jira.credentials")
+            self.assertEqual(credential["default"], "pack.jira.credentials")
             self.assertTrue(credential["key_ref"])
         self.assertEqual(triggers["jira.issues_tracker"]["output"]["fix_versions"]["type"], "array")
         self.assertIn("issue_browse_url", triggers["jira.issues_tracker"]["output"])
@@ -131,12 +131,12 @@ class PackTests(unittest.TestCase):
                 with self.subTest(config=config), self.assertRaises(jira_client.JiraPackError):
                     jira_client.create_client(config)
 
-    def test_fetch_key_explicitly_requests_decryption(self):
+    def test_fetch_key_uses_current_sdk_signature(self):
         calls = {}
         get_key_module = ModuleType("attune.api_client.api.secrets.get_key")
 
-        def sync_detailed(ref, *, client, decrypt):
-            calls.update(ref=ref, client=client, decrypt=decrypt)
+        def sync_detailed(ref, *, client):
+            calls.update(ref=ref, client=client)
             data = SimpleNamespace(value={"url": "https://jira.example.invalid"})
             return SimpleNamespace(status_code=200, parsed=SimpleNamespace(data=data))
 
@@ -152,9 +152,9 @@ class PackTests(unittest.TestCase):
             "attune.api_client.api.secrets": secrets_module,
         }
         with patch.dict(sys.modules, modules):
-            value = jira_client._fetch_key("jira.credentials")
+            value = jira_client._fetch_key("pack.jira.credentials")
         self.assertEqual(value["url"], "https://jira.example.invalid")
-        self.assertEqual(calls, {"ref": "jira.credentials", "client": "execution-client", "decrypt": True})
+        self.assertEqual(calls, {"ref": "pack.jira.credentials", "client": "execution-client"})
 
     def test_create_issue_merges_source_fields_last(self):
         captured = {}
@@ -165,7 +165,7 @@ class PackTests(unittest.TestCase):
                 return make_issue("OVERRIDE-1")
 
         with patch.object(jira_client, "client_from_params", return_value=(Client(), {"default_project": "DEMO"})):
-            result = jira_client.execute_action("create_issue", {"credential_key": "jira.credentials", "summary": "Original", "type": "Task", "extra_fields": {"summary": "Override"}})
+            result = jira_client.execute_action("create_issue", {"credential_key": "pack.jira.credentials", "summary": "Original", "type": "Task", "extra_fields": {"summary": "Override"}})
         self.assertEqual(captured["project"], {"key": "DEMO"})
         self.assertEqual(captured["summary"], "Override")
         self.assertEqual(result["key"], "OVERRIDE-1")
@@ -176,7 +176,7 @@ class PackTests(unittest.TestCase):
         issue.update = lambda **kwargs: updated.update(kwargs)
         client = SimpleNamespace(issue=lambda key: issue)
         with patch.object(jira_client, "client_from_params", return_value=(client, {})):
-            jira_client.execute_action("update_field_value", {"credential_key": "jira.credentials", "issue_key": "DEMO-1", "field": "labels", "value": "one two", "notify": False})
+            jira_client.execute_action("update_field_value", {"credential_key": "pack.jira.credentials", "issue_key": "DEMO-1", "field": "labels", "value": "one two", "notify": False})
         self.assertEqual(updated, {"fields": {"labels": ["one", "two"]}, "notify": False})
 
     def test_bulk_link_reports_partial_failures(self):
@@ -187,7 +187,7 @@ class PackTests(unittest.TestCase):
                 return None
 
         with patch.object(jira_client, "client_from_params", return_value=(Client(), {})):
-            result = jira_client.execute_action("bulk_link_issue", {"credential_key": "jira.credentials", "issue_key_list": ["OK-1", "BAD-1"], "target_issue": "TARGET-1", "direction": "outward", "link_type": "relates to"})
+            result = jira_client.execute_action("bulk_link_issue", {"credential_key": "pack.jira.credentials", "issue_key_list": ["OK-1", "BAD-1"], "target_issue": "TARGET-1", "direction": "outward", "link_type": "relates to"})
         self.assertFalse(result["success"])
         self.assertEqual({item["issue_key"] for item in result["results"]}, {"OK-1", "BAD-1"})
         self.assertEqual(sum(not item["success"] for item in result["results"]), 1)
@@ -215,7 +215,7 @@ class PackTests(unittest.TestCase):
         client = SimpleNamespace(add_gadget_to_dashboard=lambda **kwargs: None)
         with patch.object(jira_client, "client_from_params", return_value=(client, {})):
             with self.assertRaises(jira_client.JiraPackError):
-                jira_client.execute_action("add_gadget", {"credential_key": "jira.credentials", "dashboard_id": "1"})
+                jira_client.execute_action("add_gadget", {"credential_key": "pack.jira.credentials", "dashboard_id": "1"})
 
     def test_sensor_baselines_existing_issues(self):
         sensor = load_module("jira_issue_poll_baseline", PACK_ROOT / "sensors" / "jira_issue_poll.py")

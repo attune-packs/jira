@@ -10,7 +10,7 @@ parameter_format: json
 output_format: json
 default_execution_permission_set_refs: [standard]
 parameters:
-  credential_key: {type: string, default: "jira.credentials", description: "Pack-owned Jira credential Key ref"}
+  credential_key: {type: string, default: "pack.jira.credentials", description: "Pack-owned Jira credential Key ref"}
   inward_issue_key: {type: string, required: true}
   outward_issue_key: {type: string, required: true}
   link_type: {type: string, required: true, default: "relates to"}

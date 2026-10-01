@@ -10,7 +10,7 @@ parameter_format: json
 output_format: json
 default_execution_permission_set_refs: [standard]
 parameters:
-  credential_key: {type: string, default: "jira.credentials", description: "Pack-owned Jira credential Key ref"}
+  credential_key: {type: string, default: "pack.jira.credentials", description: "Pack-owned Jira credential Key ref"}
   file_path: {type: string, required: true, description: "File path under ATTUNE_ARTIFACTS_DIR on the selected worker"}
   file_name: {type: string}
   issue_key: {type: string, required: true}
